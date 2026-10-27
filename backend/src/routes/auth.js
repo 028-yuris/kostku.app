@@ -1,5 +1,6 @@
 const express = require('express');
 const { users } = require('../data/mock');
+const authenticate = require('../middleware/auth');
 const router = express.Router();
 
 router.post('/register', (req, res) => {
@@ -76,6 +77,16 @@ router.post('/login', (req, res) => {
       user: userData,
       token: `mock-jwt-token-${user.id}` // Token palsu untuk dipakai frontend
     },
+  });
+});
+
+// GET /api/v1/auth/me
+router.get('/me', authenticate, (req, res) => {
+  res.status(200).json({
+    status: true,
+    success: true,
+    message: 'Profil user berhasil diambil',
+    data: req.user,
   });
 });
 
