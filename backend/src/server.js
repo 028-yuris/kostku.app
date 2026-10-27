@@ -8,9 +8,8 @@ app.use('/api/v1/auth', authRouter);
 
 app.get('/api/v1', (_req, res) => {
   res.status(200).json({
-    status: true,
-    message: 'Welcome to Kostku API v1',
-    data: null,
+    success: true,
+    message: 'Kostku API v1',
   });
 });
 
