@@ -1,5 +1,5 @@
 const express = require('express');
-const { kamar } = require('../data/mock');
+const { kamar, penghuni, aturanKost, kontakPengelola } = require('../data/mock');
 const { authenticate, authorize } = require('../middleware/auth');
 const uploadGambar = require('../middleware/upload');
 
@@ -35,6 +35,35 @@ router.get('/', (req, res) => {
     success: true,
     message: 'Data kamar berhasil diambil',
     data: hasil,
+  });
+});
+
+/**
+ * GET /api/v1/kamar/:id
+ * Fitur 16: Detail satu kamar (foto, fasilitas, harga, status, aturan kos, kontak pengelola)
+ * Akses: Publik
+ */
+router.get('/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const item = kamar.find((k) => k.id === id);
+
+  if (!item) {
+    return res.status(404).json({
+      status: false,
+      success: false,
+      message: 'Kamar tidak ditemukan',
+    });
+  }
+
+  return res.status(200).json({
+    status: true,
+    success: true,
+    message: 'Detail kamar berhasil diambil',
+    data: {
+      ...item,
+      aturanKost,
+      kontakPengelola,
+    },
   });
 });
 
@@ -112,4 +141,123 @@ router.post('/', authenticate, authorize('pengelola'), uploadGambar(['foto', 'ga
   });
 });
 
+/**
+ * PUT /api/v1/kamar/:id
+ * Fitur 9: Mengubah data kamar (harga, fasilitas, status perawatan, dll)
+ * Akses: Pengelola
+ */
+router.put('/:id', authenticate, authorize('pengelola'), uploadGambar(['foto', 'gambar']), (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const index = kamar.findIndex((k) => k.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({
+      status: false,
+      success: false,
+      message: 'Kamar tidak ditemukan',
+    });
+  }
+
+  const { kode, nomor, lantai, luas, harga, fasilitas, status, tipe, deskripsi, foto } = req.body;
+  const newKode = kode || nomor;
+
+  // Jika kode diubah, pastikan tidak duplikat dengan kamar lain
+  if (newKode) {
+    const formattedKode = String(newKode).trim();
+    const isDuplicate = kamar.some(
+      (k) => k.id !== id && (
+        (k.kode && k.kode.toLowerCase() === formattedKode.toLowerCase()) ||
+        (k.nomor && k.nomor.toLowerCase() === formattedKode.toLowerCase())
+      )
+    );
+
+    if (isDuplicate) {
+      return res.status(400).json({
+        status: false,
+        success: false,
+        message: `Kode kamar '${formattedKode}' sudah digunakan kamar lain`,
+      });
+    }
+  }
+
+  // Format fasilitas jika dikirim
+  let fasilitasArray = kamar[index].fasilitas;
+  if (fasilitas !== undefined) {
+    if (Array.isArray(fasilitas)) {
+      fasilitasArray = fasilitas;
+    } else if (typeof fasilitas === 'string') {
+      try {
+        const parsed = JSON.parse(fasilitas);
+        fasilitasArray = Array.isArray(parsed) ? parsed : [fasilitas];
+      } catch {
+        fasilitasArray = fasilitas.split(',').map((f) => f.trim()).filter(Boolean);
+      }
+    }
+  }
+
+  const current = kamar[index];
+  const updatedKamar = {
+    ...current,
+    kode: newKode ? String(newKode).trim() : current.kode,
+    nomor: newKode ? String(newKode).trim() : current.nomor,
+    lantai: lantai !== undefined ? Number(lantai) : current.lantai,
+    luas: luas !== undefined ? String(luas).trim() : current.luas,
+    harga: harga !== undefined ? Number(harga) : current.harga,
+    fasilitas: fasilitasArray,
+    status: status !== undefined ? String(status).trim() : current.status,
+    tipe: tipe !== undefined ? String(tipe).trim() : current.tipe,
+    deskripsi: deskripsi !== undefined ? String(deskripsi).trim() : current.deskripsi,
+    foto: req.file ? req.file.relativePath : (foto !== undefined ? foto : current.foto),
+  };
+
+  kamar[index] = updatedKamar;
+
+  return res.status(200).json({
+    status: true,
+    success: true,
+    message: 'Data kamar berhasil diperbarui',
+    data: updatedKamar,
+  });
+});
+
+/**
+ * DELETE /api/v1/kamar/:id
+ * Fitur 9: Menghapus kamar
+ * Akses: Pengelola
+ * Validasi: Tolak dengan 409 jika masih ada sewa aktif
+ */
+router.delete('/:id', authenticate, authorize('pengelola'), (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const index = kamar.findIndex((k) => k.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({
+      status: false,
+      success: false,
+      message: 'Kamar tidak ditemukan',
+    });
+  }
+
+  // Cek apakah ada sewa/penghuni aktif pada kamar ini
+  const hasActiveRental = penghuni.some((p) => p.kamarId === id && p.status === 'aktif') || kamar[index].status === 'terisi';
+
+  if (hasActiveRental) {
+    return res.status(409).json({
+      status: false,
+      success: false,
+      message: 'Tidak dapat menghapus kamar: masih ada sewa aktif atau penghuni di kamar ini',
+    });
+  }
+
+  const deletedKamar = kamar.splice(index, 1)[0];
+
+  return res.status(200).json({
+    status: true,
+    success: true,
+    message: 'Kamar berhasil dihapus',
+    data: deletedKamar,
+  });
+});
+
 module.exports = router;
+

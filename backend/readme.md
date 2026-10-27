@@ -26,6 +26,9 @@
 | **Profil User** | `GET` | `/api/v1/auth/me` | Login | Header: `Authorization: Bearer <token>` | Mengembalikan profil user dari token (`req.user`). Dipakai app Flutter setelah login untuk menentukan menu berdasarkan role. |
 | **Tambah Kamar** | `POST` | `/api/v1/kamar` | Pengelola | Header: `Authorization: Bearer <token>`<br>Body: `kode`, `lantai`, `luas`, `harga`, `fasilitas[]`, `status` | Menambah kamar baru (Fitur 9). Validasi: kode unik. |
 | **Daftar Kamar** | `GET` | `/api/v1/kamar` | Publik | Query: `?status=kosong` (opsional) | Daftar kamar (Fitur 9, 15). Dukung filter `?status=kosong` untuk katalog calon penghuni. Satu endpoint dipakai dua layar. |
+| **Detail Kamar** | `GET` | `/api/v1/kamar/:id` | Publik | `-` | Detail satu kamar (Fitur 16): foto, fasilitas, harga, status, aturan kos, kontak pengelola. |
+| **Ubah Kamar** | `PUT` | `/api/v1/kamar/:id` | Pengelola | Header: `Authorization: Bearer <token>`<br>Body/Form: `harga`, `fasilitas`, `status`, dll | Mengubah data kamar (Fitur 9): harga, fasilitas, status perawatan, dll. |
+| **Hapus Kamar** | `DELETE` | `/api/v1/kamar/:id` | Pengelola | Header: `Authorization: Bearer <token>` | Menghapus kamar (Fitur 9). Tolak dengan 409 jika masih ada sewa aktif. |
 
 ## Skrip Seeding
 
