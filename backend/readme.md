@@ -15,3 +15,9 @@
 | **Registrasi** | `POST` | `/api/v1/auth/register` | Publik | Body: `nama`, `email`, `password`, `noHp` (opsional), `role` (opsional) | Mendaftarkan akun baru dan menyimpannya sementara ke *mock data*. |
 | **Login** | `POST` | `/api/v1/auth/login` | Publik | Body: `email`, `password` | Memvalidasi kredensial. Jika sukses, mengembalikan data profil pengguna beserta *mock token*. |
 | **Profil User** | `GET` | `/api/v1/auth/me` | Login | Header: `Authorization: Bearer <token>` | Mengembalikan profil user dari token (`req.user`). Dipakai app Flutter setelah login untuk menentukan menu berdasarkan role. |
+
+## Skrip Seeding
+
+| Perintah | Target | Keterangan |
+| :--- | :--- | :--- |
+| `npm run seed` / `node src/data/seed.js` | - | Mengisi database dengan data contoh dari `src/data/mock.js`, supaya endpoint bisa dites dengan data nyata. |
