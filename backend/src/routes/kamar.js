@@ -6,6 +6,39 @@ const uploadGambar = require('../middleware/upload');
 const router = express.Router();
 
 /**
+ * GET /api/v1/kamar
+ * Fitur 9, 15: Daftar kamar
+ * Akses: Publik
+ * Query params: ?status=kosong (untuk katalog calon penghuni)
+ * Keterangan: Satu endpoint dipakai dua layar (Pengelola & Calon Penghuni)
+ */
+router.get('/', (req, res) => {
+  const { status } = req.query;
+
+  let hasil = [...kamar];
+
+  if (status) {
+    const statusQuery = status.toString().trim().toLowerCase();
+
+    // Dukung filter ?status=kosong atau ?status=tersedia
+    if (statusQuery === 'kosong' || statusQuery === 'tersedia') {
+      hasil = hasil.filter(
+        (k) => k.status.toLowerCase() === 'tersedia' || k.status.toLowerCase() === 'kosong'
+      );
+    } else {
+      hasil = hasil.filter((k) => k.status.toLowerCase() === statusQuery);
+    }
+  }
+
+  return res.status(200).json({
+    status: true,
+    success: true,
+    message: 'Data kamar berhasil diambil',
+    data: hasil,
+  });
+});
+
+/**
  * POST /api/v1/kamar
  * Fitur 9: Menambah kamar
  * Akses: Pengelola
