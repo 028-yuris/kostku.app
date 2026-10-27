@@ -6,6 +6,7 @@
 | :--- | :--- | :--- |
 | **`authenticate`** | Semua | Membaca token dari header `Authorization: Bearer <token>`, mengisi `req.user`, menolak jika tidak valid (`401`). |
 | **`authorize(...roles)`** | Semua | Membatasi endpoint berdasarkan peran (`403`). Contoh: `authorize('pengelola')`. |
+| **`uploadGambar`** / `upload` | Semua | Menerima foto bukti/tiket/kamar, membatasi tipe gambar dan ukuran (maks. 2 MB). Menyimpan di `uploads/` dan menghasilkan path relatif (bukan URL penuh). |
 
 ## Daftar Helper
 

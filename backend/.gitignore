@@ -22,3 +22,7 @@ yarn-error.log*
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Uploaded assets
+uploads/*
+!uploads/.gitkeep
