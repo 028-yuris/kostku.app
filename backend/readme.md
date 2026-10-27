@@ -7,6 +7,12 @@
 | **`authenticate`** | Semua | Membaca token dari header `Authorization: Bearer <token>`, mengisi `req.user`, menolak jika tidak valid (`401`). |
 | **`authorize(...roles)`** | Semua | Membatasi endpoint berdasarkan peran (`403`). Contoh: `authorize('pengelola')`. |
 
+## Daftar Helper
+
+| Helper | Parameter | Keterangan |
+| :--- | :--- | :--- |
+| **`buatNotifikasi`** | `(userId, tipe, judul, isi, ref)` | Satu fungsi pembuat notifikasi. Dipanggil di endpoint-endpoint berikutnya saat memicu notifikasi. Endpoint baca notifikasi dibuat di tahap 5. |
+
 ## Tabel Endpoint
 
 | Fitur | Method | Endpoint | Akses | Header / Payload | Keterangan |

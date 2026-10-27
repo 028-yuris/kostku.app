@@ -206,6 +206,29 @@ const initialTiket = [
   },
 ];
 
+const initialNotifikasi = [
+  {
+    id: 1,
+    userId: 2,
+    tipe: 'tagihan',
+    judul: 'Tagihan Baru Diterbitkan',
+    isi: 'Tagihan sewa bulan Oktober 2026 sebesar Rp 1.200.000 telah terbit.',
+    ref: { tagihanId: 1 },
+    dibaca: true,
+    createdAt: '2026-10-01T08:00:00Z',
+  },
+  {
+    id: 2,
+    userId: 3,
+    tipe: 'tiket',
+    judul: 'Tiket Diproses',
+    isi: 'Laporan kerusakan AC kurang dingin sedang dijadwalkan untuk perbaikan.',
+    ref: { tiketId: 2 },
+    dibaca: false,
+    createdAt: '2026-10-25T12:00:00Z',
+  },
+];
+
 const aturanKost = [
   'Dilarang merokok di dalam kamar ber-AC.',
   'Tamu lawan jenis dilarang menginap.',
@@ -227,6 +250,24 @@ const penghuni = [...initialPenghuni];
 const tagihan = [...initialTagihan];
 const pembayaran = [...initialPembayaran];
 const tiket = [...initialTiket];
+const notifikasi = [...initialNotifikasi];
+
+// Helper pembuat notifikasi
+const buatNotifikasi = (userId, tipe, judul, isi, ref = null) => {
+  const newNotifikasi = {
+    id: notifikasi.length > 0 ? notifikasi[notifikasi.length - 1].id + 1 : 1,
+    userId: Number(userId),
+    tipe: tipe || 'info',
+    judul,
+    isi,
+    ref: ref !== undefined ? ref : null,
+    dibaca: false,
+    createdAt: new Date().toISOString(),
+  };
+
+  notifikasi.push(newNotifikasi);
+  return newNotifikasi;
+};
 
 // Fungsi untuk me-reset data ke kondisi awal
 const resetMockData = () => {
@@ -248,6 +289,9 @@ const resetMockData = () => {
   tiket.length = 0;
   tiket.push(...initialTiket);
 
+  notifikasi.length = 0;
+  notifikasi.push(...initialNotifikasi);
+
   return {
     usersCount: users.length,
     kamarCount: kamar.length,
@@ -255,6 +299,7 @@ const resetMockData = () => {
     tagihanCount: tagihan.length,
     pembayaranCount: pembayaran.length,
     tiketCount: tiket.length,
+    notifikasiCount: notifikasi.length,
   };
 };
 
@@ -266,6 +311,7 @@ module.exports = {
   tagihan,
   pembayaran,
   tiket,
+  notifikasi,
   aturanKost,
   kontakPengelola,
 
@@ -275,7 +321,9 @@ module.exports = {
   bills: tagihan,
   payments: pembayaran,
   tickets: tiket,
+  notifications: notifikasi,
 
   // Helper
+  buatNotifikasi,
   resetMockData,
 };

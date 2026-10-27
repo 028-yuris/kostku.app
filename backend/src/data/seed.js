@@ -34,6 +34,7 @@ function seedDatabase() {
   console.log(`    - Belum Lunas: ${tagihan.filter((t) => t.status === 'belum_lunas').length}`);
   console.log(`[✓] Berhasil memuat ${counts.pembayaranCount} data riwayat pembayaran (pembayaran/payments)`);
   console.log(`[✓] Berhasil memuat ${counts.tiketCount} data laporan kerusakan (tiket/tickets)`);
+  console.log(`[✓] Berhasil memuat ${counts.notifikasiCount} data notifikasi (notifikasi/notifications)`);
   console.log('==================================================');
   console.log(' Seeding selesai! Data siap dipakai untuk pengetesan.');
   console.log('==================================================\n');
