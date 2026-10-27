@@ -14,8 +14,10 @@ const initialUsers = [
 const initialKamar = [
   {
     id: 1,
+    kode: '101',
     nomor: '101',
     lantai: 1,
+    luas: '3x4 m',
     tipe: 'Standard',
     harga: 1200000,
     fasilitas: ['Kasur Single', 'Lemari Pakaian', 'Wi-Fi', 'Kamar Mandi Luar'],
@@ -25,8 +27,10 @@ const initialKamar = [
   },
   {
     id: 2,
+    kode: '102',
     nomor: '102',
     lantai: 1,
+    luas: '3.5x4 m',
     tipe: 'Deluxe',
     harga: 1600000,
     fasilitas: ['AC', 'Kasur Springbed', 'Lemari Pakaian', 'Meja Belajar', 'Wi-Fi', 'Kamar Mandi Dalam'],
@@ -36,8 +40,10 @@ const initialKamar = [
   },
   {
     id: 3,
+    kode: '201',
     nomor: '201',
     lantai: 2,
+    luas: '3.5x4 m',
     tipe: 'Deluxe',
     harga: 1600000,
     fasilitas: ['AC', 'Kasur Springbed', 'Lemari Pakaian', 'Meja Belajar', 'Wi-Fi', 'Kamar Mandi Dalam'],
@@ -47,8 +53,10 @@ const initialKamar = [
   },
   {
     id: 4,
+    kode: '202',
     nomor: '202',
     lantai: 2,
+    luas: '4x5 m',
     tipe: 'VIP',
     harga: 2000000,
     fasilitas: ['AC', 'Water Heater', 'Smart TV', 'Kasur Queen', 'Kamar Mandi Dalam', 'Balkon Pribadi', 'Wi-Fi'],
@@ -58,8 +66,10 @@ const initialKamar = [
   },
   {
     id: 5,
+    kode: '203',
     nomor: '203',
     lantai: 2,
+    luas: '3x4 m',
     tipe: 'Standard',
     harga: 1200000,
     fasilitas: ['Kasur Single', 'Lemari Pakaian', 'Wi-Fi', 'Kamar Mandi Luar'],

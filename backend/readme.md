@@ -24,6 +24,7 @@
 | **Registrasi** | `POST` | `/api/v1/auth/register` | Publik | Body: `nama`, `email`, `password`, `noHp` (opsional), `role` (opsional) | Mendaftarkan akun baru dan menyimpannya sementara ke *mock data*. |
 | **Login** | `POST` | `/api/v1/auth/login` | Publik | Body: `email`, `password` | Memvalidasi kredensial. Jika sukses, mengembalikan data profil pengguna beserta *mock token*. |
 | **Profil User** | `GET` | `/api/v1/auth/me` | Login | Header: `Authorization: Bearer <token>` | Mengembalikan profil user dari token (`req.user`). Dipakai app Flutter setelah login untuk menentukan menu berdasarkan role. |
+| **Tambah Kamar** | `POST` | `/api/v1/kamar` | Pengelola | Header: `Authorization: Bearer <token>`<br>Body: `kode`, `lantai`, `luas`, `harga`, `fasilitas[]`, `status` | Menambah kamar baru (Fitur 9). Validasi: kode unik. |
 
 ## Skrip Seeding
 

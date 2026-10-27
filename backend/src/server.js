@@ -20,7 +20,9 @@ app.use(cors({
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 const authRouter = require('./routes/auth');
+const kamarRouter = require('./routes/kamar');
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/kamar', kamarRouter);
 
 app.get('/api/v1', (_req, res) => {
   res.status(200).json({
