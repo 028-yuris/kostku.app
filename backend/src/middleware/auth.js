@@ -52,5 +52,25 @@ const authenticate = (req, res, next) => {
   next();
 };
 
+const authorize = (...roles) => {
+  const allowedRoles = roles.flat();
+
+  return (req, res, next) => {
+    if (!req.user || (allowedRoles.length > 0 && !allowedRoles.includes(req.user.role))) {
+      return res.status(403).json({
+        success: false,
+        status: false,
+        message: 'Akses terlarang: peran Anda tidak memiliki izin untuk mengakses resource ini',
+      });
+    }
+
+    next();
+  };
+};
+
+authenticate.authenticate = authenticate;
+authenticate.authorize = authorize;
+
 module.exports = authenticate;
 module.exports.authenticate = authenticate;
+module.exports.authorize = authorize;
