@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Environment Variables (Sesuai aturan kontrak praktikum)
+.env
+.env*.local
+
+# Build & Compiled outputs
+dist/
+build/
+
+# Logs & Debugging
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Prisma sqlite (jika nantinya testing pakai sqlite)
+*.db
+*.db-journal
+
+# OS generated files
+.DS_Store
+Thumbs.db
