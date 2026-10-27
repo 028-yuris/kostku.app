@@ -1,6 +1,3 @@
-# Proposal: Kostku
-
-## Pilihan Kami
 
 Kami memilih topik **Manajemen Kos (Kostku)** dan membangunnya sebagai **aplikasi Android native**, karena masalah pencatatan kos paling terasa di tangan penghuni dan pengelola sehari-hari, yaitu mengirim bukti transfer, mengecek tagihan, dan melapor kerusakan, dan semua itu paling natural dilakukan lewat ponsel. Android dipilih karena mayoritas pengguna kos di sekitar kami memakai perangkat tersebut, sehingga aplikasi bisa langsung dipakai tanpa hambatan. Kami berfokus pada tiga peran: penghuni (bayar dan lapor), pengelola (memantau arus kas, kamar, dan tiket), dan calon penghuni (melihat kamar kosong dan fasilitas). Ruang lingkup dikunci pada 16 fitur inti di bawah, yaitu semua yang menyelesaikan masalah utama berupa pembayaran yang tidak tercatat rapi dan keluhan yang tenggelam di chat. Fitur di luar daftar ini tidak akan dikerjakan sebelum 16 fitur ini selesai. Paragraf ini adalah kontrak kami: jika ada godaan menambah fitur, kami kembali ke daftar ini dan menyelesaikannya dulu.
 
