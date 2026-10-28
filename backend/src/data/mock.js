@@ -86,6 +86,7 @@ const initialPenghuni = [
     kamarId: 1,
     nama: 'Alya Putri',
     noHp: '081211110001',
+    hargaDisepakati: 1200000,
     tanggalMulai: '2026-01-01',
     tanggalSelesai: '2026-12-31',
     status: 'aktif'
@@ -96,6 +97,7 @@ const initialPenghuni = [
     kamarId: 2,
     nama: 'Bima Saputra',
     noHp: '081211110002',
+    hargaDisepakati: 1600000,
     tanggalMulai: '2026-02-01',
     tanggalSelesai: '2026-12-31',
     status: 'aktif'
@@ -106,6 +108,7 @@ const initialPenghuni = [
     kamarId: 3,
     nama: 'Citra Dewi',
     noHp: '081211110003',
+    hargaDisepakati: 1600000,
     tanggalMulai: '2026-03-01',
     tanggalSelesai: '2026-12-31',
     status: 'aktif'
@@ -115,8 +118,10 @@ const initialPenghuni = [
 const initialTagihan = [
   {
     id: 1,
+    sewaId: 1,
     userId: 2,
     kamarId: 1,
+    periode: '2026-10',
     bulan: 'Oktober 2026',
     nominal: 1200000,
     jatuhTempo: '2026-10-10',
@@ -125,8 +130,10 @@ const initialTagihan = [
   },
   {
     id: 2,
+    sewaId: 2,
     userId: 3,
     kamarId: 2,
+    periode: '2026-10',
     bulan: 'Oktober 2026',
     nominal: 1600000,
     jatuhTempo: '2026-10-10',
@@ -135,8 +142,10 @@ const initialTagihan = [
   },
   {
     id: 3,
+    sewaId: 3,
     userId: 4,
     kamarId: 3,
+    periode: '2026-10',
     bulan: 'Oktober 2026',
     nominal: 1600000,
     jatuhTempo: '2026-10-05',
@@ -145,8 +154,10 @@ const initialTagihan = [
   },
   {
     id: 4,
+    sewaId: 1,
     userId: 2,
     kamarId: 1,
+    periode: '2026-11',
     bulan: 'November 2026',
     nominal: 1200000,
     jatuhTempo: '2026-11-10',
