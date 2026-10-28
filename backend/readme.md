@@ -1,5 +1,20 @@
 # Kostku Backend API
 
+Backend API untuk aplikasi Kostku menggunakan Node.js & Express.js. Dokumen ini diperbarui secara berkelanjutan di setiap penambahan fitur endpoint, middleware, dan helper.
+
+### Ringkasan Progres Backend:
+- **Total Endpoint:** 17 Endpoint REST API
+- **Middleware Siap:** `authenticate`, `authorize`, `uploadGambar` (Multer), `CORS`
+- **Helper Siap:** `buatNotifikasi`
+- **Fitur yang Telah Diimplementasikan di Backend:**
+  - [x] **Fitur 1 (Registrasi & Login):** `POST /api/v1/auth/register`, `POST /api/v1/auth/login`, `GET /api/v1/auth/me`
+  - [x] **Fitur 2 & 11 (Tagihan Bulanan):** `POST /api/v1/tagihan/generate`, `GET /api/v1/tagihan`, `GET /api/v1/tagihan/saya`
+  - [x] **Fitur 9 (Kelola Data Kamar):** `POST /api/v1/kamar`, `GET /api/v1/kamar`, `GET /api/v1/kamar/:id`, `PUT /api/v1/kamar/:id`, `DELETE /api/v1/kamar/:id`, `POST /api/v1/kamar/:id/foto`
+  - [x] **Fitur 10 (Kelola Penghuni & Sewa):** `GET /api/v1/penghuni`, `GET /api/v1/sewa`, `PATCH /api/v1/sewa/:id/akhiri`
+  - [x] **Fitur 15 & 16 (Katalog & Detail Kos):** `GET /api/v1/kamar`, `GET /api/v1/kamar/:id`, `GET /api/v1/kos`, `PUT /api/v1/kos`
+
+---
+
 ## Daftar Middleware
 
 | Middleware | Target | Keterangan |
