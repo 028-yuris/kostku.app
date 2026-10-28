@@ -30,6 +30,8 @@
 | **Ubah Kamar** | `PUT` | `/api/v1/kamar/:id` | Pengelola | Header: `Authorization: Bearer <token>`<br>Body/Form: `harga`, `fasilitas`, `status`, dll | Mengubah data kamar (Fitur 9): harga, fasilitas, status perawatan, dll. |
 | **Hapus Kamar** | `DELETE` | `/api/v1/kamar/:id` | Pengelola | Header: `Authorization: Bearer <token>` | Menghapus kamar (Fitur 9). Tolak dengan 409 jika masih ada sewa aktif. |
 | **Unggah Foto Kamar** | `POST` | `/api/v1/kamar/:id/foto` | Pengelola | Header: `Authorization: Bearer <token>`<br>Multipart: file foto (`foto`/`gambar`) | Mengunggah foto kamar (Fitur 9, 16). Menggunakan middleware upload (maks 2 MB), simpan path relatif ke `foto[]`. |
+| **Info Kos** | `GET` | `/api/v1/kos` | Publik | `-` | Info kos (Fitur 16): nama, alamat, kontak WhatsApp, jam kunjung, aturan. Ditampilkan di detail kamar. |
+| **Ubah Info Kos** | `PUT` | `/api/v1/kos` | Pengelola | Header: `Authorization: Bearer <token>`<br>Body: info kos, rekening, tanggal jatuh tempo | Mengubah info kos, rekening pembayaran, dan tanggal jatuh tempo bulanan (Fitur 16). |
 
 ## Skrip Seeding
 

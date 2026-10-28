@@ -239,18 +239,42 @@ const initialNotifikasi = [
   },
 ];
 
-const aturanKost = [
-  'Dilarang merokok di dalam kamar ber-AC.',
-  'Tamu lawan jenis dilarang menginap.',
-  'Jam tenang berlaku mulai pukul 22:00 WIB.',
-  'Menjaga kebersihan area bersama (dapur & tempat jemur).',
-];
+const initialInfoKos = {
+  nama: 'Kostku Babarsari',
+  alamat: 'Jl. Babarsari No. 42, Sleman, D.I. Yogyakarta',
+  kontakWhatsApp: '081234567890',
+  whatsapp: 'https://wa.me/6281234567890',
+  telepon: '081234567890',
+  namaPengelola: 'Hendra Wijaya',
+  jamKunjung: '08:00 - 21:00 WIB',
+  aturan: [
+    'Dilarang merokok di dalam kamar ber-AC.',
+    'Tamu lawan jenis dilarang menginap.',
+    'Jam tenang berlaku mulai pukul 22:00 WIB.',
+    'Menjaga kebersihan area bersama (dapur & tempat jemur).',
+  ],
+  rekening: {
+    bank: 'BCA',
+    nomorRekening: '1234567890',
+    atasNama: 'Hendra Wijaya',
+  },
+  tanggalJatuhTempo: 10,
+  deskripsi: 'Kos eksklusif dan nyaman di dekat kampus dengan fasilitas lengkap dan keamanan 24 jam.',
+};
+
+const aturanKost = initialInfoKos.aturan;
 
 const kontakPengelola = {
-  nama: 'Hendra Wijaya',
-  telepon: '081234567890',
-  whatsapp: 'https://wa.me/6281234567890',
-  alamat: 'Jl. Babarsari No. 42, Sleman, D.I. Yogyakarta'
+  nama: initialInfoKos.namaPengelola,
+  telepon: initialInfoKos.telepon,
+  whatsapp: initialInfoKos.whatsapp,
+  alamat: initialInfoKos.alamat,
+};
+
+const infoKos = {
+  ...initialInfoKos,
+  aturan: [...initialInfoKos.aturan],
+  rekening: { ...initialInfoKos.rekening },
 };
 
 // Data mutable in-memory
@@ -306,6 +330,12 @@ const resetMockData = () => {
   notifikasi.length = 0;
   notifikasi.push(...initialNotifikasi);
 
+  Object.assign(infoKos, {
+    ...initialInfoKos,
+    aturan: [...initialInfoKos.aturan],
+    rekening: { ...initialInfoKos.rekening },
+  });
+
   return {
     usersCount: users.length,
     kamarCount: kamar.length,
@@ -326,6 +356,8 @@ module.exports = {
   pembayaran,
   tiket,
   notifikasi,
+  infoKos,
+  kos: infoKos,
   aturanKost,
   kontakPengelola,
 
