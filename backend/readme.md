@@ -29,6 +29,7 @@
 | **Detail Kamar** | `GET` | `/api/v1/kamar/:id` | Publik | `-` | Detail satu kamar (Fitur 16): foto, fasilitas, harga, status, aturan kos, kontak pengelola. |
 | **Ubah Kamar** | `PUT` | `/api/v1/kamar/:id` | Pengelola | Header: `Authorization: Bearer <token>`<br>Body/Form: `harga`, `fasilitas`, `status`, dll | Mengubah data kamar (Fitur 9): harga, fasilitas, status perawatan, dll. |
 | **Hapus Kamar** | `DELETE` | `/api/v1/kamar/:id` | Pengelola | Header: `Authorization: Bearer <token>` | Menghapus kamar (Fitur 9). Tolak dengan 409 jika masih ada sewa aktif. |
+| **Unggah Foto Kamar** | `POST` | `/api/v1/kamar/:id/foto` | Pengelola | Header: `Authorization: Bearer <token>`<br>Multipart: file foto (`foto`/`gambar`) | Mengunggah foto kamar (Fitur 9, 16). Menggunakan middleware upload (maks 2 MB), simpan path relatif ke `foto[]`. |
 
 ## Skrip Seeding
 
