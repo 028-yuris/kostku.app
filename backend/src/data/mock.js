@@ -364,6 +364,8 @@ module.exports = {
   // Alias bahasa Inggris untuk fleksibilitas
   rooms: kamar,
   tenants: penghuni,
+  sewa: penghuni,
+  leases: penghuni,
   bills: tagihan,
   payments: pembayaran,
   tickets: tiket,

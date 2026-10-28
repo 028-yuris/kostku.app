@@ -33,6 +33,8 @@
 | **Info Kos** | `GET` | `/api/v1/kos` | Publik | `-` | Info kos (Fitur 16): nama, alamat, kontak WhatsApp, jam kunjung, aturan. Ditampilkan di detail kamar. |
 | **Ubah Info Kos** | `PUT` | `/api/v1/kos` | Pengelola | Header: `Authorization: Bearer <token>`<br>Body: info kos, rekening, tanggal jatuh tempo | Mengubah info kos, rekening pembayaran, dan tanggal jatuh tempo bulanan (Fitur 16). |
 | **Daftar Penghuni** | `GET` | `/api/v1/penghuni` | Pengelola | Header: `Authorization: Bearer <token>`<br>Query: `?tanpaSewa=true` (opsional) | Daftar penghuni beserta kamar dan sewa aktifnya (Fitur 10). Filter `?tanpaSewa=true` untuk memilih penghuni yang belum punya kamar. |
+| **Daftar Sewa** | `GET` | `/api/v1/sewa` | Pengelola | Header: `Authorization: Bearer <token>`<br>Query: `?status=aktif` (opsional) | Daftar sewa/kontrak kamar, filter `?status=aktif`. |
+| **Akhiri Sewa** | `PATCH` | `/api/v1/sewa/:id/akhiri` | Pengelola | Header: `Authorization: Bearer <token>`<br>Body: `tanggalSelesai` (opsional) | Mengakhiri sewa. Efek: sewa menjadi selesai, status kamar kembali kosong (tersedia). |
 
 ## Skrip Seeding
 

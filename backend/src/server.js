@@ -23,10 +23,12 @@ const authRouter = require('./routes/auth');
 const kamarRouter = require('./routes/kamar');
 const kosRouter = require('./routes/kos');
 const penghuniRouter = require('./routes/penghuni');
+const sewaRouter = require('./routes/sewa');
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/kamar', kamarRouter);
 app.use('/api/v1/kos', kosRouter);
 app.use('/api/v1/penghuni', penghuniRouter);
+app.use('/api/v1/sewa', sewaRouter);
 
 app.get('/api/v1', (_req, res) => {
   res.status(200).json({
