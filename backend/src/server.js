@@ -22,9 +22,11 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 const authRouter = require('./routes/auth');
 const kamarRouter = require('./routes/kamar');
 const kosRouter = require('./routes/kos');
+const penghuniRouter = require('./routes/penghuni');
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/kamar', kamarRouter);
 app.use('/api/v1/kos', kosRouter);
+app.use('/api/v1/penghuni', penghuniRouter);
 
 app.get('/api/v1', (_req, res) => {
   res.status(200).json({
