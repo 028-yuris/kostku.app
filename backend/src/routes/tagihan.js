@@ -1,8 +1,75 @@
 const express = require('express');
-const { tagihan, penghuni, kamar, users, infoKos, buatNotifikasi } = require('../data/mock');
+const { tagihan, penghuni, kamar, users, pembayaran, infoKos, buatNotifikasi } = require('../data/mock');
 const { authenticate, authorize } = require('../middleware/auth');
 
 const router = express.Router();
+
+/**
+ * GET /api/v1/tagihan/saya
+ * Fitur 11: Tagihan milik penghuni yang login, terbaru dulu
+ * Akses: Penghuni
+ * Fitur: Sertakan field hitungan terlambat
+ */
+router.get('/saya', authenticate, authorize('penghuni'), (req, res) => {
+  const today = new Date();
+  const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  let daftar = tagihan
+    .filter((t) => t.userId === req.user.id)
+    .map((t) => {
+      const room = kamar.find((k) => k.id === t.kamarId);
+      const payment = pembayaran ? pembayaran.find((p) => p.tagihanId === t.id) : null;
+
+      // Hitungan terlambat: hanya berlaku jika status belum lunas
+      let terlambat = false;
+      let hariTerlambat = 0;
+
+      if (t.status !== 'lunas') {
+        const dueDate = new Date(t.jatuhTempo);
+        const dueDateOnly = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
+        const diffMs = todayDateOnly - dueDateOnly;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffDays > 0) {
+          terlambat = true;
+          hariTerlambat = diffDays;
+        }
+      }
+
+      return {
+        ...t,
+        terlambat,
+        hariTerlambat,
+        kamar: room
+          ? {
+              id: room.id,
+              kode: room.kode || room.nomor,
+              nomor: room.nomor || room.kode,
+              lantai: room.lantai,
+              tipe: room.tipe,
+              harga: room.harga,
+            }
+          : null,
+        pembayaran: payment || null,
+      };
+    });
+
+  // Urutkan terbaru dulu (berdasarkan jatuh tempo descending, lalu id descending)
+  daftar.sort((a, b) => {
+    if (b.jatuhTempo && a.jatuhTempo) {
+      const cmp = new Date(b.jatuhTempo) - new Date(a.jatuhTempo);
+      if (cmp !== 0) return cmp;
+    }
+    return b.id - a.id;
+  });
+
+  return res.status(200).json({
+    status: true,
+    success: true,
+    message: 'Data tagihan saya berhasil diambil',
+    data: daftar,
+  });
+});
 
 /**
  * GET /api/v1/tagihan

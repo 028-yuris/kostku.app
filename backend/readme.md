@@ -37,6 +37,7 @@
 | **Akhiri Sewa** | `PATCH` | `/api/v1/sewa/:id/akhiri` | Pengelola | Header: `Authorization: Bearer <token>`<br>Body: `tanggalSelesai` (opsional) | Mengakhiri sewa. Efek: sewa menjadi selesai, status kamar kembali kosong (tersedia). |
 | **Generate Tagihan** | `POST` | `/api/v1/tagihan/generate` | Pengelola | Header: `Authorization: Bearer <token>`<br>Body: `{ "periode": "2026-11" }` | Membuat tagihan satu periode untuk semua sewa aktif (Fitur 11). Jumlah dari hargaDisepakati, jatuh tempo dari kos.tanggalJatuhTempo, lewati yang sudah ada, dan panggil `buatNotifikasi` ke tiap penghuni. |
 | **Daftar Tagihan** | `GET` | `/api/v1/tagihan` | Pengelola | Header: `Authorization: Bearer <token>`<br>Query: `?periode=2026-10&status=belum_bayar` (opsional) | Semua tagihan, filter `?periode=2026-10` dan `?status=belum_bayar`. |
+| **Tagihan Saya** | `GET` | `/api/v1/tagihan/saya` | Penghuni | Header: `Authorization: Bearer <token>` | Tagihan milik penghuni yang login, diurutkan terbaru dulu. Menyertakan field hitungan terlambat (`terlambat`, `hariTerlambat`). |
 
 ## Skrip Seeding
 
