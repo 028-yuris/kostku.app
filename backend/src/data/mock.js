@@ -23,7 +23,7 @@ const initialKamar = [
     fasilitas: ['Kasur Single', 'Lemari Pakaian', 'Wi-Fi', 'Kamar Mandi Luar'],
     status: 'terisi',
     deskripsi: 'Kamar lantai 1 dengan sirkulasi udara baik dan dekat dengan dapur bersama.',
-    foto: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600'
+    foto: ['https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600']
   },
   {
     id: 2,
@@ -36,7 +36,7 @@ const initialKamar = [
     fasilitas: ['AC', 'Kasur Springbed', 'Lemari Pakaian', 'Meja Belajar', 'Wi-Fi', 'Kamar Mandi Dalam'],
     status: 'terisi',
     deskripsi: 'Kamar deluxe dengan kamar mandi dalam dan pendingin ruangan AC.',
-    foto: 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=600'
+    foto: ['https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=600']
   },
   {
     id: 3,
@@ -49,7 +49,7 @@ const initialKamar = [
     fasilitas: ['AC', 'Kasur Springbed', 'Lemari Pakaian', 'Meja Belajar', 'Wi-Fi', 'Kamar Mandi Dalam'],
     status: 'terisi',
     deskripsi: 'Kamar deluxe lantai 2 dengan pencahayaan alami yang luas.',
-    foto: 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=600'
+    foto: ['https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=600']
   },
   {
     id: 4,
@@ -62,7 +62,7 @@ const initialKamar = [
     fasilitas: ['AC', 'Water Heater', 'Smart TV', 'Kasur Queen', 'Kamar Mandi Dalam', 'Balkon Pribadi', 'Wi-Fi'],
     status: 'tersedia',
     deskripsi: 'Kamar VIP paling luas dengan balkon pribadi dan fasilitas lengkap.',
-    foto: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600'
+    foto: ['https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600']
   },
   {
     id: 5,
@@ -75,7 +75,7 @@ const initialKamar = [
     fasilitas: ['Kasur Single', 'Lemari Pakaian', 'Wi-Fi', 'Kamar Mandi Luar'],
     status: 'tersedia',
     deskripsi: 'Kamar standard nyaman dan tenang di lantai 2.',
-    foto: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600'
+    foto: ['https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600']
   },
 ];
 
@@ -285,7 +285,11 @@ const resetMockData = () => {
   users.push(...initialUsers);
 
   kamar.length = 0;
-  kamar.push(...initialKamar);
+  kamar.push(...initialKamar.map((k) => ({
+    ...k,
+    foto: Array.isArray(k.foto) ? [...k.foto] : (k.foto ? [k.foto] : []),
+    fasilitas: Array.isArray(k.fasilitas) ? [...k.fasilitas] : [],
+  })));
 
   penghuni.length = 0;
   penghuni.push(...initialPenghuni);

@@ -128,7 +128,7 @@ router.post('/', authenticate, authorize('pengelola'), uploadGambar(['foto', 'ga
     fasilitas: fasilitasArray,
     status: status ? String(status).trim() : 'tersedia',
     deskripsi: deskripsi ? String(deskripsi).trim() : '',
-    foto: req.file ? req.file.relativePath : (foto || ''),
+    foto: req.file ? [req.file.relativePath] : (Array.isArray(foto) ? foto : (foto ? [foto] : [])),
   };
 
   kamar.push(newKamar);
@@ -207,7 +207,9 @@ router.put('/:id', authenticate, authorize('pengelola'), uploadGambar(['foto', '
     status: status !== undefined ? String(status).trim() : current.status,
     tipe: tipe !== undefined ? String(tipe).trim() : current.tipe,
     deskripsi: deskripsi !== undefined ? String(deskripsi).trim() : current.deskripsi,
-    foto: req.file ? req.file.relativePath : (foto !== undefined ? foto : current.foto),
+    foto: req.file
+      ? (Array.isArray(current.foto) ? [...current.foto, req.file.relativePath] : [req.file.relativePath])
+      : (foto !== undefined ? (Array.isArray(foto) ? foto : [foto]) : current.foto),
   };
 
   kamar[index] = updatedKamar;
@@ -217,6 +219,53 @@ router.put('/:id', authenticate, authorize('pengelola'), uploadGambar(['foto', '
     success: true,
     message: 'Data kamar berhasil diperbarui',
     data: updatedKamar,
+  });
+});
+
+/**
+ * POST /api/v1/kamar/:id/foto
+ * Fitur 9, 16: Mengunggah foto kamar
+ * Akses: Pengelola
+ * Multipart: Menerima file foto dan menyimpan path relatif ke foto[]
+ */
+router.post('/:id/foto', authenticate, authorize('pengelola'), uploadGambar(['foto', 'gambar']), (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const item = kamar.find((k) => k.id === id);
+
+  if (!item) {
+    return res.status(404).json({
+      status: false,
+      success: false,
+      message: 'Kamar tidak ditemukan',
+    });
+  }
+
+  if (!req.file) {
+    return res.status(400).json({
+      status: false,
+      success: false,
+      message: 'File foto wajib diunggah',
+    });
+  }
+
+  // Pastikan properti foto berbentuk array
+  if (!Array.isArray(item.foto)) {
+    item.foto = item.foto ? [item.foto] : [];
+  }
+
+  // Simpan path relatif ke foto[]
+  item.foto.push(req.file.relativePath);
+
+  return res.status(200).json({
+    status: true,
+    success: true,
+    message: 'Foto kamar berhasil diunggah',
+    data: {
+      id: item.id,
+      kode: item.kode,
+      foto: item.foto,
+      uploaded: req.file.relativePath,
+    },
   });
 });
 
