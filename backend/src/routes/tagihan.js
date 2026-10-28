@@ -1,8 +1,73 @@
 const express = require('express');
-const { tagihan, penghuni, kamar, infoKos, buatNotifikasi } = require('../data/mock');
+const { tagihan, penghuni, kamar, users, infoKos, buatNotifikasi } = require('../data/mock');
 const { authenticate, authorize } = require('../middleware/auth');
 
 const router = express.Router();
+
+/**
+ * GET /api/v1/tagihan
+ * Fitur: Semua tagihan
+ * Akses: Pengelola
+ * Query params: ?periode=2026-10&status=belum_bayar (opsional)
+ */
+router.get('/', authenticate, authorize('pengelola'), (req, res) => {
+  const { periode, status } = req.query;
+
+  let hasil = tagihan.map((t) => {
+    const user = users.find((u) => u.id === t.userId);
+    const room = kamar.find((k) => k.id === t.kamarId);
+
+    return {
+      ...t,
+      user: user
+        ? {
+            id: user.id,
+            nama: user.nama,
+            email: user.email,
+            noHp: user.noHp,
+          }
+        : null,
+      kamar: room
+        ? {
+            id: room.id,
+            kode: room.kode || room.nomor,
+            nomor: room.nomor || room.kode,
+            lantai: room.lantai,
+            tipe: room.tipe,
+            harga: room.harga,
+          }
+        : null,
+    };
+  });
+
+  // Filter periode
+  if (periode) {
+    const pTrim = periode.trim().toLowerCase();
+    hasil = hasil.filter(
+      (t) => (t.periode && t.periode.toLowerCase() === pTrim) ||
+             (t.bulan && t.bulan.toLowerCase().includes(pTrim))
+    );
+  }
+
+  // Filter status (mendukung belum_bayar dan belum_lunas)
+  if (status) {
+    const sTrim = status.trim().toLowerCase();
+    if (sTrim === 'belum_bayar' || sTrim === 'belum_lunas') {
+      hasil = hasil.filter(
+        (t) => t.status.toLowerCase() === 'belum_bayar' || t.status.toLowerCase() === 'belum_lunas'
+      );
+    } else {
+      hasil = hasil.filter((t) => t.status.toLowerCase() === sTrim);
+    }
+  }
+
+  return res.status(200).json({
+    status: true,
+    success: true,
+    message: 'Data tagihan berhasil diambil',
+    data: hasil,
+  });
+});
 
 /**
  * POST /api/v1/tagihan/generate
