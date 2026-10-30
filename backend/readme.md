@@ -59,3 +59,6 @@ Backend API untuk aplikasi Kostku menggunakan Node.js & Express.js. Dokumen ini 
 | Perintah | Target | Keterangan |
 | :--- | :--- | :--- |
 | `npm run seed` / `node src/data/seed.js` | - | Mengisi database dengan data contoh dari `src/data/mock.js`, supaya endpoint bisa dites dengan data nyata. |
+
+
+.
