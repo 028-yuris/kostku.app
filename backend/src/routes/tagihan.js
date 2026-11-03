@@ -1,6 +1,7 @@
 const express = require('express');
 const { tagihan, penghuni, kamar, users, pembayaran, infoKos, buatNotifikasi } = require('../data/mock');
 const { authenticate, authorize } = require('../middleware/auth');
+const uploadGambar = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -215,6 +216,125 @@ router.get('/:id', authenticate, authorize('penghuni', 'pengelola'), (req, res) 
     },
   });
 });
+
+/**
+ * POST /api/v1/tagihan/:id/pembayaran
+ * Fitur 4, 11: Unggah bukti transfer pembayaran tagihan
+ * Akses: Penghuni
+ * Payload multipart: file foto ('bukti', 'foto', 'gambar') + jumlah (atau nominal)
+ * Validasi:
+ *  - Tagihan milik sendiri
+ *  - Belum lunas
+ *  - Belum berstatus menunggu_verifikasi
+ *  - File bukti transfer wajib diunggah
+ * Efek:
+ *  - Buat pembayaran berstatus 'menunggu'
+ *  - Tagihan menjadi 'menunggu_verifikasi'
+ *  - Notifikasi ke pengelola
+ */
+router.post(
+  '/:id/pembayaran',
+  authenticate,
+  authorize('penghuni'),
+  uploadGambar(['bukti', 'foto', 'gambar']),
+  (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const item = tagihan.find((t) => t.id === id);
+
+    if (!item) {
+      return res.status(404).json({
+        status: false,
+        success: false,
+        message: 'Tagihan tidak ditemukan',
+      });
+    }
+
+    // 1. Validasi kepemilikan tagihan
+    if (item.userId !== req.user.id) {
+      return res.status(403).json({
+        status: false,
+        success: false,
+        message: 'Akses ditolak: Anda hanya dapat membayar tagihan milik sendiri',
+      });
+    }
+
+    // 2. Validasi belum lunas
+    if (item.status === 'lunas') {
+      return res.status(400).json({
+        status: false,
+        success: false,
+        message: 'Tagihan ini sudah lunas',
+      });
+    }
+
+    // 3. Validasi belum menunggu_verifikasi
+    if (item.status === 'menunggu_verifikasi') {
+      return res.status(400).json({
+        status: false,
+        success: false,
+        message: 'Pembayaran tagihan ini sedang menunggu verifikasi pengelola',
+      });
+    }
+
+    // 4. Validasi file foto bukti transfer
+    if (!req.file) {
+      return res.status(400).json({
+        status: false,
+        success: false,
+        message: 'File bukti transfer wajib diunggah',
+      });
+    }
+
+    // 5. Ambil data jumlah/nominal & metode pembayaran
+    const { jumlah, nominal, metode, catatan } = req.body;
+    const jumlahBayar = Number(jumlah || nominal) || item.nominal;
+
+    const newPaymentId =
+      pembayaran.length > 0 ? Math.max(...pembayaran.map((p) => p.id)) + 1 : 1;
+
+    const newPembayaran = {
+      id: newPaymentId,
+      tagihanId: item.id,
+      userId: req.user.id,
+      nominal: jumlahBayar,
+      metode: metode ? String(metode).trim() : 'Transfer Bank',
+      buktiFoto: req.file.relativePath,
+      tanggalBayar: new Date().toISOString(),
+      status: 'menunggu',
+      catatan: catatan ? String(catatan).trim() : 'Menunggu verifikasi pengelola',
+    };
+
+    pembayaran.push(newPembayaran);
+
+    // 6. Efek: ubah status tagihan menjadi menunggu_verifikasi
+    item.status = 'menunggu_verifikasi';
+
+    // 7. Efek: kirim notifikasi ke pengelola (cari akun pengelola di users)
+    const pengelolaUsers = users.filter((u) => u.role === 'pengelola');
+    const room = kamar.find((k) => k.id === item.kamarId);
+    const kodeKamar = room ? (room.kode || room.nomor) : item.kamarId;
+
+    pengelolaUsers.forEach((p) => {
+      buatNotifikasi(
+        p.id,
+        'pembayaran',
+        'Bukti Pembayaran Baru',
+        `Penghuni ${req.user.nama} (Kamar ${kodeKamar}) telah mengunggah bukti pembayaran untuk tagihan periode ${item.periode || item.bulan} sebesar Rp ${Number(jumlahBayar).toLocaleString('id-ID')}.`,
+        { tagihanId: item.id, pembayaranId: newPaymentId, userId: req.user.id }
+      );
+    });
+
+    return res.status(201).json({
+      status: true,
+      success: true,
+      message: 'Bukti transfer berhasil diunggah dan sedang menunggu verifikasi pengelola',
+      data: {
+        tagihan: item,
+        pembayaran: newPembayaran,
+      },
+    });
+  }
+);
 
 /**
  * POST /api/v1/tagihan/generate
