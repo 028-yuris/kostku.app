@@ -327,16 +327,16 @@ const resetMockData = () => {
   })));
 
   penghuni.length = 0;
-  penghuni.push(...initialPenghuni);
+  penghuni.push(...initialPenghuni.map((p) => ({ ...p })));
 
   tagihan.length = 0;
-  tagihan.push(...initialTagihan);
+  tagihan.push(...initialTagihan.map((t) => ({ ...t })));
 
   pembayaran.length = 0;
-  pembayaran.push(...initialPembayaran);
+  pembayaran.push(...initialPembayaran.map((p) => ({ ...p })));
 
   tiket.length = 0;
-  tiket.push(...initialTiket);
+  tiket.push(...initialTiket.map((t) => ({ ...t })));
 
   notifikasi.length = 0;
   notifikasi.push(...initialNotifikasi);

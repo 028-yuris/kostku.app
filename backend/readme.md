@@ -9,7 +9,7 @@ Dokumen ini diperbarui setiap kali ada endpoint, middleware, atau helper baru.
 
 | Item | Status |
 | :--- | :--- |
-| Total endpoint | **20** endpoint REST API (di luar cek kesehatan & file statis) |
+| Total endpoint | **21** endpoint REST API (di luar cek kesehatan & file statis) |
 | Middleware siap | `authenticate`, `authorize`, `uploadGambar` (Multer), `CORS` |
 | Helper siap | `buatNotifikasi` |
 | Base URL | `/api/v1` |
@@ -21,7 +21,7 @@ Dokumen ini diperbarui setiap kali ada endpoint, middleware, atau helper baru.
 | 1 | Registrasi & Login | `POST /auth/register`, `POST /auth/login`, `GET /auth/me` |
 | 2 & 11 | Tagihan Bulanan | `POST /tagihan/generate`, `GET /tagihan`, `GET /tagihan/saya`, `GET /tagihan/:id`, `POST /tagihan/:id/pembayaran` |
 | 4 | Unggah Bukti Transfer | `POST /tagihan/:id/pembayaran` |
-| 12 | Verifikasi Pembayaran | `GET /pembayaran` |
+| 12 | Verifikasi Pembayaran | `GET /pembayaran`, `PATCH /pembayaran/:id/verifikasi` |
 | 9 | Kelola Data Kamar | `POST /kamar`, `GET /kamar`, `GET /kamar/:id`, `PUT /kamar/:id`, `DELETE /kamar/:id`, `POST /kamar/:id/foto` |
 | 10 | Kelola Penghuni & Sewa | `GET /penghuni`, `GET /sewa`, `PATCH /sewa/:id/akhiri` |
 | 15 & 16 | Katalog & Detail Kos | `GET /kamar`, `GET /kamar/:id`, `GET /kos`, `PUT /kos` |
@@ -122,6 +122,7 @@ Authorization: Bearer <token>
 | Method | Endpoint | Akses | Input | Keterangan |
 | :--- | :--- | :--- | :--- | :--- |
 | `GET` | `/api/v1/pembayaran` | Pengelola | Header: `Authorization`<br>Query: `?status=menunggu` (opsional) | Antrean verifikasi pembayaran. Menyertakan field nama penghuni, kamar, dan periode tagihan. |
+| `PATCH` | `/api/v1/pembayaran/:id/verifikasi` | Pengelola | Header: `Authorization`<br>Body: `keputusan` (`diterima`/`ditolak`), `catatan` | Memverifikasi pembayaran menunggu. Diterima: tagihan otomatis lunas. Ditolak: catatan wajib, tagihan kembali belum_bayar. Otomatis kirim notifikasi ke penghuni. |
  ---
 
  ## Skrip Seeding

@@ -34,10 +34,21 @@ app.use('/api/v1/sewa', sewaRouter);
 app.use('/api/v1/tagihan', tagihanRouter);
 app.use('/api/v1/pembayaran', pembayaranRouter);
 
+const { resetMockData } = require('./data/mock');
+
 app.get('/api/v1', (_req, res) => {
   res.status(200).json({
     success: true,
     message: 'Kostku API v1',
+  });
+});
+
+app.post('/api/v1/seed', (_req, res) => {
+  const counts = resetMockData();
+  res.status(200).json({
+    success: true,
+    message: 'Database berhasil di-reset ke data awal',
+    data: counts,
   });
 });
 
