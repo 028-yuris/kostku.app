@@ -186,7 +186,7 @@ const initialPembayaran = [
     metode: 'Transfer Bank Mandiri',
     buktiFoto: 'https://placehold.co/600x800/png?text=Bukti+Transfer+Bima',
     tanggalBayar: '2026-10-10T14:15:00Z',
-    status: 'pending',
+    status: 'menunggu',
     catatan: 'Menunggu verifikasi pengelola'
   },
 ];

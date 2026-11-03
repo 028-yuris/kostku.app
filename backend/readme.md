@@ -9,7 +9,7 @@ Dokumen ini diperbarui setiap kali ada endpoint, middleware, atau helper baru.
 
 | Item | Status |
 | :--- | :--- |
-| Total endpoint | **19** endpoint REST API (di luar cek kesehatan & file statis) |
+| Total endpoint | **20** endpoint REST API (di luar cek kesehatan & file statis) |
 | Middleware siap | `authenticate`, `authorize`, `uploadGambar` (Multer), `CORS` |
 | Helper siap | `buatNotifikasi` |
 | Base URL | `/api/v1` |
@@ -19,8 +19,9 @@ Dokumen ini diperbarui setiap kali ada endpoint, middleware, atau helper baru.
 | Fitur | Nama | Endpoint |
 | :--- | :--- | :--- |
 | 1 | Registrasi & Login | `POST /auth/register`, `POST /auth/login`, `GET /auth/me` |
-| 2 & 11 | Tagihan Bulanan & Pembayaran | `POST /tagihan/generate`, `GET /tagihan`, `GET /tagihan/saya`, `GET /tagihan/:id`, `POST /tagihan/:id/pembayaran` |
+| 2 & 11 | Tagihan Bulanan | `POST /tagihan/generate`, `GET /tagihan`, `GET /tagihan/saya`, `GET /tagihan/:id`, `POST /tagihan/:id/pembayaran` |
 | 4 | Unggah Bukti Transfer | `POST /tagihan/:id/pembayaran` |
+| 12 | Verifikasi Pembayaran | `GET /pembayaran` |
 | 9 | Kelola Data Kamar | `POST /kamar`, `GET /kamar`, `GET /kamar/:id`, `PUT /kamar/:id`, `DELETE /kamar/:id`, `POST /kamar/:id/foto` |
 | 10 | Kelola Penghuni & Sewa | `GET /penghuni`, `GET /sewa`, `PATCH /sewa/:id/akhiri` |
 | 15 & 16 | Katalog & Detail Kos | `GET /kamar`, `GET /kamar/:id`, `GET /kos`, `PUT /kos` |
@@ -115,10 +116,15 @@ Authorization: Bearer <token>
 | `GET` | `/api/v1/tagihan/saya` | Penghuni | Header: `Authorization` | Tagihan milik penghuni yang sedang login, diurutkan dari yang terbaru. Menyertakan field keterlambatan: `terlambat` dan `hariTerlambat`. |
 | `GET` | `/api/v1/tagihan/:id` | Penghuni (miliknya) / Pengelola | Header: `Authorization` | Detail tagihan beserta daftar riwayat percobaan pembayarannya. Cek kepemilikan untuk penghuni. |
 | `POST` | `/api/v1/tagihan/:id/pembayaran` | Penghuni | Header: `Authorization`<br>Multipart: file foto (`bukti`/`foto`/`gambar`), `jumlah` (opsional) | Mengunggah bukti transfer. Validasi: tagihan milik sendiri, belum lunas, dan belum menunggu_verifikasi. Efek: buat pembayaran baru berstatus `menunggu`, tagihan berubah jadi `menunggu_verifikasi`, dan kirim notifikasi ke pengelola. |
+ 
+### Verifikasi Pembayaran (Fitur 12)
 
----
+| Method | Endpoint | Akses | Input | Keterangan |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/api/v1/pembayaran` | Pengelola | Header: `Authorization`<br>Query: `?status=menunggu` (opsional) | Antrean verifikasi pembayaran. Menyertakan field nama penghuni, kamar, dan periode tagihan. |
+ ---
 
-## Skrip Seeding
+ ## Skrip Seeding
 
 | Perintah | Keterangan |
 | :--- | :--- |

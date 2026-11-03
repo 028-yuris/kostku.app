@@ -17,7 +17,7 @@ router.post('/register', (req, res) => {
   // 2. Cek apakah email sudah terdaftar
   const isEmailExist = users.find((u) => u.email === email);
   if (isEmailExist) {
-    return res.status(400).json({ 
+    return res.status(400).json({     
       status: false, 
       message: 'Email sudah terdaftar' 
     });
