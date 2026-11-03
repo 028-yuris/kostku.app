@@ -137,6 +137,86 @@ router.get('/', authenticate, authorize('pengelola'), (req, res) => {
 });
 
 /**
+ * GET /api/v1/tagihan/:id
+ * Fitur 11: Detail tagihan beserta daftar percobaan pembayarannya
+ * Akses: Penghuni (miliknya) / Pengelola
+ * Aturan: Cek kepemilikan untuk penghuni (403 jika mengakses tagihan orang lain)
+ */
+router.get('/:id', authenticate, authorize('penghuni', 'pengelola'), (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const item = tagihan.find((t) => t.id === id);
+
+  if (!item) {
+    return res.status(404).json({
+      status: false,
+      success: false,
+      message: 'Tagihan tidak ditemukan',
+    });
+  }
+
+  // Cek kepemilikan: Jika role adalah penghuni, pastikan userId sesuai dengan user login
+  if (req.user.role === 'penghuni' && item.userId !== req.user.id) {
+    return res.status(403).json({
+      status: false,
+      success: false,
+      message: 'Akses ditolak: Anda hanya dapat melihat tagihan milik sendiri',
+    });
+  }
+
+  const user = users.find((u) => u.id === item.userId);
+  const room = kamar.find((k) => k.id === item.kamarId);
+  const payments = pembayaran ? pembayaran.filter((p) => p.tagihanId === item.id) : [];
+
+  // Hitungan terlambat
+  const today = new Date();
+  const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  let terlambat = false;
+  let hariTerlambat = 0;
+
+  if (item.status !== 'lunas') {
+    const dueDate = new Date(item.jatuhTempo);
+    const dueDateOnly = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
+    const diffMs = todayDateOnly - dueDateOnly;
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 0) {
+      terlambat = true;
+      hariTerlambat = diffDays;
+    }
+  }
+
+  return res.status(200).json({
+    status: true,
+    success: true,
+    message: 'Detail tagihan berhasil diambil',
+    data: {
+      ...item,
+      terlambat,
+      hariTerlambat,
+      user: user
+        ? {
+            id: user.id,
+            nama: user.nama,
+            email: user.email,
+            noHp: user.noHp,
+          }
+        : null,
+      kamar: room
+        ? {
+            id: room.id,
+            kode: room.kode || room.nomor,
+            nomor: room.nomor || room.kode,
+            lantai: room.lantai,
+            tipe: room.tipe,
+            harga: room.harga,
+          }
+        : null,
+      pembayaran: payments,
+    },
+  });
+});
+
+/**
  * POST /api/v1/tagihan/generate
  * Fitur 11: Membuat tagihan satu periode untuk semua sewa aktif
  * Akses: Pengelola
