@@ -138,6 +138,86 @@ router.get('/', authenticate, authorize('pengelola'), (req, res) => {
 });
 
 /**
+ * GET /api/v1/tagihan/penunggak
+ * Fitur 13: Daftar penunggak tagihan
+ * Akses: Pengelola
+ * Keterangan: Tagihan belum_bayar yang jatuhTempo sudah lewat, lengkap dengan
+ *             nama penghuni, kamar, jumlah, dan lama keterlambatan (hari).
+ *             Didaftarkan sebelum /:id agar "penunggak" tidak tertangkap sebagai id.
+ */
+router.get('/penunggak', authenticate, authorize('pengelola'), (_req, res) => {
+  const today = new Date();
+  const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  // Filter tagihan yang belum lunas / belum dibayar (belum_bayar atau belum_lunas)
+  const penunggakList = [];
+
+  tagihan.forEach((t) => {
+    const isUnpaid = t.status === 'belum_bayar' || t.status === 'belum_lunas';
+    if (!isUnpaid) return;
+
+    if (!t.jatuhTempo) return;
+
+    const dueDate = new Date(t.jatuhTempo);
+    const dueDateOnly = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
+    const diffMs = todayDateOnly - dueDateOnly;
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    // Hanya ambil yang jatuhTempo sudah lewat (diffDays > 0)
+    if (diffDays > 0) {
+      const user = users.find((u) => u.id === t.userId);
+      const room = kamar.find((k) => k.id === t.kamarId);
+      const kodeKamar = room ? (room.kode || room.nomor) : (t.kamarId ? String(t.kamarId) : null);
+
+      penunggakList.push({
+        id: t.id,
+        tagihanId: t.id,
+        sewaId: t.sewaId || null,
+        userId: t.userId,
+        namaPenghuni: user ? user.nama : null,
+        kamar: kodeKamar,
+        jumlah: t.nominal,
+        nominal: t.nominal,
+        periode: t.periode || t.bulan,
+        bulan: t.bulan || t.periode,
+        jatuhTempo: t.jatuhTempo,
+        lamaKeterlambatanHari: diffDays,
+        hariTerlambat: diffDays,
+        status: t.status,
+        penghuni: user
+          ? {
+              id: user.id,
+              nama: user.nama,
+              email: user.email,
+              noHp: user.noHp,
+            }
+          : null,
+        detailKamar: room
+          ? {
+              id: room.id,
+              kode: room.kode || room.nomor,
+              nomor: room.nomor || room.kode,
+              lantai: room.lantai,
+              tipe: room.tipe,
+              harga: room.harga,
+            }
+          : null,
+      });
+    }
+  });
+
+  // Urutkan dari yang paling lama menunggak (descending)
+  penunggakList.sort((a, b) => b.lamaKeterlambatanHari - a.lamaKeterlambatanHari);
+
+  return res.status(200).json({
+    status: true,
+    success: true,
+    message: 'Data penunggak tagihan berhasil diambil',
+    data: penunggakList,
+  });
+});
+
+/**
  * GET /api/v1/tagihan/:id
  * Fitur 11: Detail tagihan beserta daftar percobaan pembayarannya
  * Akses: Penghuni (miliknya) / Pengelola

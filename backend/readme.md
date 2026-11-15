@@ -9,7 +9,7 @@ Dokumen ini diperbarui setiap kali ada endpoint, middleware, atau helper baru.
 
 | Item | Status |
 | :--- | :--- |
-| Total endpoint | **21** endpoint REST API (di luar cek kesehatan & file statis) |
+| Total endpoint | **22** endpoint REST API (di luar cek kesehatan & file statis) |
 | Middleware siap | `authenticate`, `authorize`, `uploadGambar` (Multer), `CORS` |
 | Helper siap | `buatNotifikasi` |
 | Base URL | `/api/v1` |
@@ -22,6 +22,7 @@ Dokumen ini diperbarui setiap kali ada endpoint, middleware, atau helper baru.
 | 2 & 11 | Tagihan Bulanan | `POST /tagihan/generate`, `GET /tagihan`, `GET /tagihan/saya`, `GET /tagihan/:id`, `POST /tagihan/:id/pembayaran` |
 | 4 | Unggah Bukti Transfer | `POST /tagihan/:id/pembayaran` |
 | 12 | Verifikasi Pembayaran | `GET /pembayaran`, `PATCH /pembayaran/:id/verifikasi` |
+| 13 | Daftar Penunggak | `GET /tagihan/penunggak` |
 | 9 | Kelola Data Kamar | `POST /kamar`, `GET /kamar`, `GET /kamar/:id`, `PUT /kamar/:id`, `DELETE /kamar/:id`, `POST /kamar/:id/foto` |
 | 10 | Kelola Penghuni & Sewa | `GET /penghuni`, `GET /sewa`, `PATCH /sewa/:id/akhiri` |
 | 15 & 16 | Katalog & Detail Kos | `GET /kamar`, `GET /kamar/:id`, `GET /kos`, `PUT /kos` |
@@ -113,6 +114,7 @@ Authorization: Bearer <token>
 | :--- | :--- | :--- | :--- | :--- |
 | `POST` | `/api/v1/tagihan/generate` | Pengelola | Header: `Authorization`<br>Body: `{ "periode": "2026-11" }` | Membuat tagihan satu periode untuk **semua sewa aktif**. Jumlah diambil dari `hargaDisepakati`, jatuh tempo dari `kos.tanggalJatuhTempo`. Tagihan yang sudah ada dilewati, lalu `buatNotifikasi` dipanggil ke tiap penghuni. |
 | `GET` | `/api/v1/tagihan` | Pengelola | Header: `Authorization`<br>Query: `?periode=2026-10&status=belum_bayar` (opsional) | Semua tagihan. Bisa difilter dengan `?periode=` dan `?status=`. |
+| `GET` | `/api/v1/tagihan/penunggak` | Pengelola | Header: `Authorization` | Tagihan belum_bayar yang jatuhTempo sudah lewat (Fitur 13). Lengkap dengan nama penghuni, kamar, jumlah, dan lama keterlambatan (hari). |
 | `GET` | `/api/v1/tagihan/saya` | Penghuni | Header: `Authorization` | Tagihan milik penghuni yang sedang login, diurutkan dari yang terbaru. Menyertakan field keterlambatan: `terlambat` dan `hariTerlambat`. |
 | `GET` | `/api/v1/tagihan/:id` | Penghuni (miliknya) / Pengelola | Header: `Authorization` | Detail tagihan beserta daftar riwayat percobaan pembayarannya. Cek kepemilikan untuk penghuni. |
 | `POST` | `/api/v1/tagihan/:id/pembayaran` | Penghuni | Header: `Authorization`<br>Multipart: file foto (`bukti`/`foto`/`gambar`), `jumlah` (opsional) | Mengunggah bukti transfer. Validasi: tagihan milik sendiri, belum lunas, dan belum menunggu_verifikasi. Efek: buat pembayaran baru berstatus `menunggu`, tagihan berubah jadi `menunggu_verifikasi`, dan kirim notifikasi ke pengelola. |
