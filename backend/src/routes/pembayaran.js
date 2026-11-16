@@ -5,6 +5,56 @@ const { authenticate, authorize } = require('../middleware/auth');
 const router = express.Router();
 
 /**
+ * GET /api/v1/pembayaran/saya
+ * Fitur 5: Riwayat pembayaran milik sendiri
+ * Akses: Penghuni
+ * Keterangan: Sertakan periode tagihan, status, dan detail kamar
+ */
+router.get('/saya', authenticate, authorize('penghuni'), (req, res) => {
+  const myPayments = pembayaran
+    .filter((p) => p.userId === req.user.id)
+    .map((p) => {
+      const bill = tagihan.find((t) => t.id === p.tagihanId);
+      const room = bill ? kamar.find((k) => k.id === bill.kamarId) : null;
+      const kodeKamar = room ? (room.kode || room.nomor) : (bill ? bill.kamarId : null);
+
+      return {
+        id: p.id,
+        tagihanId: p.tagihanId,
+        nominal: p.nominal,
+        metode: p.metode,
+        buktiFoto: p.buktiFoto,
+        tanggalBayar: p.tanggalBayar,
+        status: p.status,
+        catatan: p.catatan,
+        periode: bill ? (bill.periode || bill.bulan) : null,
+        bulan: bill ? bill.bulan : null,
+        kamar: kodeKamar,
+        tagihan: bill
+          ? {
+              id: bill.id,
+              periode: bill.periode,
+              bulan: bill.bulan,
+              nominal: bill.nominal,
+              jatuhTempo: bill.jatuhTempo,
+              status: bill.status,
+            }
+          : null,
+      };
+    });
+
+  // Urutkan dari yang terbaru (tanggalBayar descending)
+  myPayments.sort((a, b) => new Date(b.tanggalBayar) - new Date(a.tanggalBayar));
+
+  return res.status(200).json({
+    status: true,
+    success: true,
+    message: 'Riwayat pembayaran saya berhasil diambil',
+    data: myPayments,
+  });
+});
+
+/**
  * GET /api/v1/pembayaran
  * Fitur 12: Antrean verifikasi pembayaran
  * Akses: Pengelola

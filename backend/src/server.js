@@ -26,6 +26,11 @@ const penghuniRouter = require('./routes/penghuni');
 const sewaRouter = require('./routes/sewa');
 const tagihanRouter = require('./routes/tagihan');
 const pembayaranRouter = require('./routes/pembayaran');
+const tiketRouter = require('./routes/tiket');
+const notifikasiRouter = require('./routes/notifikasi');
+const dasborRouter = require('./routes/dasbor');
+const { mulaiSchedulerPengingat } = require('./jobs/pengingatTagihan');
+
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/kamar', kamarRouter);
 app.use('/api/v1/kos', kosRouter);
@@ -33,6 +38,12 @@ app.use('/api/v1/penghuni', penghuniRouter);
 app.use('/api/v1/sewa', sewaRouter);
 app.use('/api/v1/tagihan', tagihanRouter);
 app.use('/api/v1/pembayaran', pembayaranRouter);
+app.use('/api/v1/tiket', tiketRouter);
+app.use('/api/v1/notifikasi', notifikasiRouter);
+app.use('/api/v1/dasbor', dasborRouter);
+
+// Jalankan scheduler pengingat jatuh tempo
+mulaiSchedulerPengingat();
 
 const { resetMockData } = require('./data/mock');
 
@@ -52,6 +63,10 @@ app.post('/api/v1/seed', (_req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server berjalan di http://localhost:${port}`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Server berjalan di http://localhost:${port}`);
+  });
+}
+
+module.exports = app;

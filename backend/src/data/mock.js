@@ -196,33 +196,48 @@ const initialTiket = [
     id: 1,
     userId: 2,
     kamarId: 1,
+    kategori: 'air',
     judul: 'Kran wastafel bocor',
     deskripsi: 'Kran air di wastafel menetes terus dan tidak bisa ditutup rapat.',
     foto: 'https://placehold.co/600x400/png?text=Foto+Kran+Bocor',
     status: 'selesai',
     penanganan: 'Kran diganti baru oleh teknisi pada 13 Oktober 2026',
+    riwayat: [
+      { status: 'pending', catatan: 'Laporan kerusakan dibuat', tanggal: '2026-10-12T10:00:00Z' },
+      { status: 'diproses', catatan: 'Teknisi dijadwalkan datang', tanggal: '2026-10-12T14:00:00Z' },
+      { status: 'selesai', catatan: 'Kran diganti baru oleh teknisi pada 13 Oktober 2026', tanggal: '2026-10-13T11:00:00Z' },
+    ],
     tanggalLapor: '2026-10-12T10:00:00Z'
   },
   {
     id: 2,
     userId: 3,
     kamarId: 2,
+    kategori: 'elektronik',
     judul: 'AC kurang dingin',
     deskripsi: 'AC sudah diatur 16 derajat tapi hembusan angin kurang dingin.',
     foto: 'https://placehold.co/600x400/png?text=Foto+AC',
     status: 'diproses',
     penanganan: 'Jadwal servis pembersihan AC diagendakan besok siang',
+    riwayat: [
+      { status: 'pending', catatan: 'Laporan kerusakan dibuat', tanggal: '2026-10-25T11:20:00Z' },
+      { status: 'diproses', catatan: 'Jadwal servis pembersihan AC diagendakan besok siang', tanggal: '2026-10-25T14:00:00Z' },
+    ],
     tanggalLapor: '2026-10-25T11:20:00Z'
   },
   {
     id: 3,
     userId: 4,
     kamarId: 3,
+    kategori: 'listrik',
     judul: 'Lampu kamar mandi mati',
     deskripsi: 'Bohlam lampu kamar mandi padam tadi pagi.',
     foto: 'https://placehold.co/600x400/png?text=Foto+Lampu+Mati',
     status: 'pending',
     penanganan: null,
+    riwayat: [
+      { status: 'pending', catatan: 'Laporan kerusakan dibuat', tanggal: '2026-10-27T08:00:00Z' },
+    ],
     tanggalLapor: '2026-10-27T08:00:00Z'
   },
 ];
