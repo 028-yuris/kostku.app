@@ -157,8 +157,9 @@ Authorization: Bearer <token>
 
 ---
 
-## Skrip Seeding
+## Setup Database & Seeding
 
 | Perintah | Keterangan |
 | :--- | :--- |
-| `npm run seed` atau `node src/data/seed.js` | Mengisi database dengan data contoh dari `src/data/mock.js`, supaya endpoint bisa dites dengan data nyata. |
+| `npm run db:setup` (atau `npm run db:migrate`) | **Setup Database Otomatis.** Mengeksekusi `src/data/schema.sql` ke MySQL (otomatis mendeteksi XAMPP/Laragon): membuat database `kostku_db`, 10 tabel, relasi foreign key, dan mengisi seluruh data awal. |
+| `npm run seed` atau `node src/data/seed.js` | Mengisi/me-reset in-memory mock data ke kondisi awal untuk testing server mock. |
