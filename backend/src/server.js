@@ -1,6 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+
+try {
+  process.loadEnvFile(path.join(__dirname, '../.env'));
+} catch {
+  /* .env opsional */
+}
+
 const app = express();
 const port = 3000;
 

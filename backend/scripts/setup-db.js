@@ -2,6 +2,12 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
+try {
+  process.loadEnvFile(path.join(__dirname, '..', '.env'));
+} catch {
+  /* .env opsional */
+}
+
 function findMysqlBinary() {
   // 1. Cek dari environment variable jika ada
   if (process.env.MYSQL_PATH && fs.existsSync(process.env.MYSQL_PATH)) {

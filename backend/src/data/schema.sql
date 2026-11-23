@@ -209,13 +209,18 @@ CREATE TABLE IF NOT EXISTS info_kos (
 -- DATA SEED (DATA CONTOH AWAL)
 -- ========================================================
 
--- 1. SEED USERS
-INSERT IGNORE INTO users (id, nama, email, password, no_hp, role) VALUES
-(1, 'Hendra Wijaya', 'hendra@kostku.test', 'password123', '081234567890', 'pengelola'),
-(2, 'Alya Putri', 'alya@kostku.test', 'password123', '081211110001', 'penghuni'),
-(3, 'Bima Saputra', 'bima@kostku.test', 'password123', '081211110002', 'penghuni'),
-(4, 'Citra Dewi', 'citra@kostku.test', 'password123', '081211110003', 'penghuni'),
-(5, 'Doni Pratama', 'doni@kostku.test', 'password123', '081211110004', 'calon_penghuni');
+-- 1. SEED USERS (password awal semua akun seed: "password123" dalam hash bcrypt)
+INSERT INTO users (id, nama, email, password, no_hp, role) VALUES
+(1, 'Hendra Wijaya', 'hendra@kostku.test', '$2b$10$LZ2EcuDWagyR20pWGoK2g.S4.FFD.RZTQa.oTMj5Z7Qrg4S1cP6Fy', '081234567890', 'pengelola'),
+(2, 'Alya Putri', 'alya@kostku.test', '$2b$10$LZ2EcuDWagyR20pWGoK2g.S4.FFD.RZTQa.oTMj5Z7Qrg4S1cP6Fy', '081211110001', 'penghuni'),
+(3, 'Bima Saputra', 'bima@kostku.test', '$2b$10$LZ2EcuDWagyR20pWGoK2g.S4.FFD.RZTQa.oTMj5Z7Qrg4S1cP6Fy', '081211110002', 'penghuni'),
+(4, 'Citra Dewi', 'citra@kostku.test', '$2b$10$LZ2EcuDWagyR20pWGoK2g.S4.FFD.RZTQa.oTMj5Z7Qrg4S1cP6Fy', '081211110003', 'penghuni'),
+(5, 'Doni Pratama', 'doni@kostku.test', '$2b$10$LZ2EcuDWagyR20pWGoK2g.S4.FFD.RZTQa.oTMj5Z7Qrg4S1cP6Fy', '081211110004', 'calon_penghuni')
+ON DUPLICATE KEY UPDATE
+  nama = VALUES(nama),
+  password = VALUES(password),
+  no_hp = VALUES(no_hp),
+  role = VALUES(role);
 
 -- 2. SEED KAMAR
 INSERT IGNORE INTO kamar (id, kode, lantai, luas, tipe, harga, status, deskripsi) VALUES
