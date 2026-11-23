@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { aset, getKamar, login, register, rupiah, type Kamar, type User } from '../lib/api';
 	import type { PageProps } from './$types';
@@ -116,6 +117,11 @@
 					: `Selamat datang kembali, ${res.user.nama}!`
 			);
 			authMode = null;
+			if (res.user.role === 'pengelola') {
+				goto('/dashboard');
+			} else if (res.user.role === 'penghuni') {
+				goto('/penghuni');
+			}
 		} catch (err) {
 			authGalat = err instanceof Error ? err.message : 'Terjadi kesalahan';
 		} finally {
@@ -204,6 +210,9 @@
 				<div class="hidden items-center gap-3 md:flex">
 					{#if user}
 						<span class="text-sm text-gray-600">Halo, <b class="text-gray-900">{user.nama}</b></span>
+						{#if user.role === 'pengelola' || user.role === 'penghuni'}
+							<a href={user.role === 'pengelola' ? '/dashboard' : '/penghuni'} class="rounded-full bg-accent px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-accent/30 transition hover:bg-accent-dark">Dashboard</a>
+						{/if}
 						<button onclick={keluar} class="rounded-full border border-brand px-5 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white">Keluar</button>
 					{:else}
 						<button onclick={() => bukaAuth('login')} class="rounded-full border border-brand px-5 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white">Masuk</button>
@@ -225,6 +234,9 @@
 					{/each}
 					<div class="mt-2 flex gap-3">
 						{#if user}
+							{#if user.role === 'pengelola' || user.role === 'penghuni'}
+								<a href={user.role === 'pengelola' ? '/dashboard' : '/penghuni'} class="flex-1 rounded-full bg-accent py-2.5 text-center font-semibold text-white">Dashboard</a>
+							{/if}
 							<button onclick={keluar} class="flex-1 rounded-full border border-brand py-2.5 font-semibold text-brand">Keluar ({user.nama})</button>
 						{:else}
 							<button onclick={() => bukaAuth('login')} class="flex-1 rounded-full border border-brand py-2.5 font-semibold text-brand">Masuk</button>

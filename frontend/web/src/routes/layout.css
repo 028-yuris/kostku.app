@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* Pastikan Tailwind selalu memindai komponen di src/lib (dashboard, dll.) */
+@source '../lib';
+
 @theme {
 	--color-brand: #176b78;
 	--color-brand-dark: #0f5560;
